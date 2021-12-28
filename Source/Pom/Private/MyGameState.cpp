@@ -1,8 +1,6 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 #include "MyGameState.h"
 
-
-
 AMyGameState::AMyGameState()
 {
 	m_spawnPosition.SetComponents(
@@ -14,6 +12,8 @@ AMyGameState::AMyGameState()
 
 	m_spawnParameters = FActorSpawnParameters();
 	m_spawnParameters.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::DontSpawnIfColliding;
+
+	m_falseArray.Init(false, COLUMN_COUNT);
 }
 
 void AMyGameState::BeginPlay()
@@ -76,7 +76,8 @@ void AMyGameState::Restart()
 void AMyGameState::ClearPoms()
 {
 	// Initialize arrays to false
-	ResetArrays();
+	ResetArray(m_shouldPositionBeCleared);
+	
 	TArray<ArrayIndex> matchedIndices;
 	// See if poms should have themselves removed
 	for(int i = 0; i < m_pomColors.Num(); ++i)
@@ -87,6 +88,7 @@ void AMyGameState::ClearPoms()
 			if(m_pomColors[i][j] == PomColors::None)
 				continue;
 			matchedIndices.Empty();
+			ResetArray(m_explored);
 			CheckPom(i, j, m_pomColors[i][j], matchedIndices);
 			if(matchedIndices.Num() >= COUNT_TO_CLEAR)
 			{
@@ -114,6 +116,8 @@ void AMyGameState::ClearPoms()
 				auto message = TEXT("Deleting pom at position %d %d", i, j);
 				GEngine->AddOnScreenDebugMessage(-1, 12.f, FColor::White, message);
 #endif
+				m_poms[i][j] = nullptr;
+				m_pomColors[i][j] = PomColors::None;
 			}
 		}
 	}
@@ -121,11 +125,16 @@ void AMyGameState::ClearPoms()
 
 void AMyGameState::CheckPom(int row, int column, PomColors& colorToMatch, TArray<ArrayIndex>& matchedIndices)
 {
+	if(!TestIfArrayIsValid(m_explored, row, column))
+		return;
 	// We've already tested this spot
 	if(m_explored[row][column])
 		return;
-		
+	
 	m_explored[row][column] = true;
+
+	if(m_shouldPositionBeCleared[row][column])
+		return;
 	
 	if(m_pomColors[row][column] == PomColors::None)
 		return;
@@ -147,19 +156,21 @@ void AMyGameState::CheckPom(int row, int column, PomColors& colorToMatch, TArray
 		CheckPom(row + 1, column, colorToMatch, matchedIndices);
 }
 
-void AMyGameState::ResetArrays()
+void AMyGameState::ResetArray(TArray<TArray<bool>>& arr)
 {
-	m_shouldPositionBeCleared.Empty();
-	m_explored.Empty();
-	
 	const int maxHeight = m_poms.Num();
-	m_shouldPositionBeCleared.Init(
-		TArray<bool>(false, COLUMN_COUNT),
-		maxHeight
-	);
-	m_explored.Init(
-		TArray<bool>(false, COLUMN_COUNT),
-		maxHeight
-	);
+
+	arr.Empty();
+	while(arr.Num() < maxHeight)
+		arr.Add(m_falseArray);
 }
 
+bool AMyGameState::TestIfArrayIsValid(TArray<TArray<bool>> arr, int32 row, int32 col)
+{
+	const int32 rowCount = arr.Num() - 1;
+
+	const bool invalidRow = rowCount < row || row < 0;
+	const bool invalidCol = col < 0 || col > COLUMN_COUNT - 1;
+
+	return !invalidRow && !invalidCol;
+}

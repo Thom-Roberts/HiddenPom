@@ -52,7 +52,8 @@ public:
 	int32 COLUMN_COUNT = 5;
 	
 private:
-	void ResetArrays();
+	void ResetArray(TArray<TArray<bool>>& arr);
+	bool TestIfArrayIsValid(TArray<TArray<bool>> arr, int32 row, int32 col);
 	
 private:
 	bool m_gameOver;
@@ -61,6 +62,7 @@ private:
 	TArray<TArray<bool>> m_shouldPositionBeCleared;
 	TArray<TArray<bool>> m_explored;
 	
+	TArray<bool> m_falseArray;
 	
 	FActorSpawnParameters m_spawnParameters;
 };
