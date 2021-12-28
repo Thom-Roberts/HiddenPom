@@ -32,3 +32,8 @@ void APlayerBase::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 
 }
 
+void APlayerBase::SetCurrentPom(APomBase* pom)
+{
+	currentPom = pom;
+}
+

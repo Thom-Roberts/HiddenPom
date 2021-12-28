@@ -41,18 +41,24 @@ public:
 	void ClearPoms();
 	void CheckPom(int row, int column, PomColors& colorToMatch, TArray<ArrayIndex>& matchedIndices);
 
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="CPP")
+	FTransform m_spawnPosition;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="CPP")
+	int32 COUNT_TO_CLEAR = 3;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="CPP")
+	int32 COLUMN_COUNT = 5;
+	
 private:
 	void ResetArrays();
-
+	
 private:
-	FTransform m_spawnPosition;
 	bool m_gameOver;
 	TArray<TArray<APomBase*>> m_poms;
 	TArray<TArray<PomColors>> m_pomColors;
 	TArray<TArray<bool>> m_shouldPositionBeCleared;
 	TArray<TArray<bool>> m_explored;
-	const int COLUMN_COUNT = 5;
-	const int COUNT_TO_CLEAR = 3;
+	
 	
 	FActorSpawnParameters m_spawnParameters;
 };

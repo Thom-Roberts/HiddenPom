@@ -40,14 +40,22 @@ void AMyGameState::SpawnNewPom()
 
 void AMyGameState::SetPomColorPosition(int row, int column, PomColors color, APomBase* pom)
 {
-	if(m_pomColors.Num() <= row)
-		m_pomColors.EmplaceAt(row, COLUMN_COUNT);
+	while(m_pomColors.Num() <= row)
+	{
+		TArray<PomColors> temp;
+		temp.Init(PomColors::None, COLUMN_COUNT);
+		m_pomColors.Add(temp);
+	}
 	if(m_pomColors[row].Num() < COLUMN_COUNT)
 		m_pomColors[row].Init(PomColors::None, COLUMN_COUNT);
 	m_pomColors[row][column] = color;
 
-	if(m_poms.Num() <= row)
-		m_poms.EmplaceAt(row, COLUMN_COUNT);
+	while(m_poms.Num() <= row)
+	{
+		TArray<APomBase*> temp;
+		temp.Init(nullptr, COLUMN_COUNT);
+		m_poms.Add(temp);
+	}
 	if(m_poms[row].Num() < COLUMN_COUNT)
 		m_poms[row].Init(nullptr, COLUMN_COUNT);
 	m_poms[row][column] = pom;
