@@ -42,6 +42,8 @@ public:
 	void CheckPom(int row, int column, PomColors& colorToMatch, TArray<ArrayIndex>& matchedIndices);
 
 public:
+	UPROPERTY(EditDefaultsOnly, Category="Paramters")
+	TSubclassOf<AActor> PomClass;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="CPP")
 	FTransform m_spawnPosition;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="CPP")

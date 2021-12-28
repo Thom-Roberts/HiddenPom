@@ -23,13 +23,12 @@ void AMyGameState::BeginPlay()
 
 void AMyGameState::SpawnNewPom()
 {
-	const auto spawnedActor = GetWorld()->SpawnActor(APomBase::StaticClass(), &m_spawnPosition, m_spawnParameters);
+	const auto spawnedActor = GetWorld()->SpawnActor(PomClass, &m_spawnPosition, m_spawnParameters);
 	if(IsValid(spawnedActor))
 	{
-		const auto playerPawn = Cast<APlayerBase>(
-			UGameplayStatics::GetPlayerPawn(GetWorld(), 0)
-			);
-		playerPawn->SetCurrentPom(Cast<APomBase>(spawnedActor));
+		APawn* playerPawn = UGameplayStatics::GetPlayerPawn(GetWorld(), 0);
+		APlayerBase* castPawn = Cast<APlayerBase>(playerPawn);
+		castPawn->SetCurrentPom(Cast<APomBase>(spawnedActor));
 	}
 	// Could not spawn
 	else
