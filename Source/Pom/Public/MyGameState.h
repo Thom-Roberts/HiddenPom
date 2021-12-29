@@ -63,6 +63,7 @@ private:
 	TArray<TArray<bool>> m_explored;
 	
 	TArray<bool> m_falseArray;
-	
+	TArray<APomBase*> m_nullptrArray;
+
 	FActorSpawnParameters m_spawnParameters;
 };

@@ -4,7 +4,7 @@
 AMyGameState::AMyGameState()
 {
 	m_spawnPosition.SetComponents(
-		FVector().ToOrientationQuat(),
+		FQuat::MakeFromEuler(FVector(0)),
 		FVector(-20, 0, 550),
 		FVector(1)
 	);
@@ -14,6 +14,7 @@ AMyGameState::AMyGameState()
 	m_spawnParameters.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::DontSpawnIfColliding;
 
 	m_falseArray.Init(false, COLUMN_COUNT);
+	m_nullptrArray.Init(nullptr, COLUMN_COUNT);
 }
 
 void AMyGameState::BeginPlay()
@@ -51,9 +52,7 @@ void AMyGameState::SetPomColorPosition(int row, int column, PomColors color, APo
 
 	while(m_poms.Num() <= row)
 	{
-		TArray<APomBase*> temp;
-		temp.Init(nullptr, COLUMN_COUNT);
-		m_poms.Add(temp);
+		m_poms.Add(m_nullptrArray);
 	}
 	if(m_poms[row].Num() < COLUMN_COUNT)
 		m_poms[row].Init(nullptr, COLUMN_COUNT);
@@ -92,9 +91,8 @@ void AMyGameState::ClearPoms()
 			CheckPom(i, j, m_pomColors[i][j], matchedIndices);
 			if(matchedIndices.Num() >= COUNT_TO_CLEAR)
 			{
-				for (auto& matchedIndex : matchedIndices)
+				for (const auto& matchedIndex : matchedIndices)
 				{
-					
 					m_shouldPositionBeCleared
 						[matchedIndex.row]
 						[matchedIndex.column] = true;
