@@ -16,8 +16,6 @@ public:
 	APomBase();
 
 protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
 
 public:	
 	// Called every frame
@@ -25,8 +23,8 @@ public:
 
 };
 
-UENUM(Blueprintable)
-enum PomColors
+UENUM(BlueprintType)
+enum PomColor
 {
 	None     UMETA(DisplayName = "None"),
 	Red      UMETA(DisplayName = "Red"),

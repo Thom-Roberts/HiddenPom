@@ -11,13 +11,6 @@ APomBase::APomBase()
 
 }
 
-// Called when the game starts or when spawned
-void APomBase::BeginPlay()
-{
-	Super::BeginPlay();
-	
-}
-
 // Called every frame
 void APomBase::Tick(float DeltaTime)
 {

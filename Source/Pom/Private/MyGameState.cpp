@@ -38,16 +38,16 @@ void AMyGameState::SpawnNewPom()
 	}
 }
 
-void AMyGameState::SetPomColorPosition(int row, int column, PomColors color, APomBase* pom)
+void AMyGameState::SetPomColorPosition(int row, int column, PomColor color, APomBase* pom)
 {
 	while(m_pomColors.Num() <= row)
 	{
-		TArray<PomColors> temp;
-		temp.Init(PomColors::None, COLUMN_COUNT);
+		TArray<PomColor> temp;
+		temp.Init(PomColor::None, COLUMN_COUNT);
 		m_pomColors.Add(temp);
 	}
 	if(m_pomColors[row].Num() < COLUMN_COUNT)
-		m_pomColors[row].Init(PomColors::None, COLUMN_COUNT);
+		m_pomColors[row].Init(PomColor::None, COLUMN_COUNT);
 	m_pomColors[row][column] = color;
 
 	while(m_poms.Num() <= row)
@@ -84,7 +84,7 @@ void AMyGameState::ClearPoms()
 		const auto currentRow = m_pomColors[i];
 		for(int j = 0; j < currentRow.Num(); ++j)
 		{
-			if(m_pomColors[i][j] == PomColors::None)
+			if(m_pomColors[i][j] == PomColor::None)
 				continue;
 			matchedIndices.Empty();
 			ResetArray(m_explored);
@@ -115,13 +115,13 @@ void AMyGameState::ClearPoms()
 				GEngine->AddOnScreenDebugMessage(-1, 12.f, FColor::White, message);
 #endif
 				m_poms[i][j] = nullptr;
-				m_pomColors[i][j] = PomColors::None;
+				m_pomColors[i][j] = PomColor::None;
 			}
 		}
 	}
 }
 
-void AMyGameState::CheckPom(int row, int column, PomColors& colorToMatch, TArray<ArrayIndex>& matchedIndices)
+void AMyGameState::CheckPom(int row, int column, PomColor& colorToMatch, TArray<ArrayIndex>& matchedIndices)
 {
 	if(!TestIfArrayIsValid(m_explored, row, column))
 		return;
@@ -134,11 +134,11 @@ void AMyGameState::CheckPom(int row, int column, PomColors& colorToMatch, TArray
 	if(m_shouldPositionBeCleared[row][column])
 		return;
 	
-	if(m_pomColors[row][column] == PomColors::None)
+	if(m_pomColors[row][column] == PomColor::None)
 		return;
 	
 	// Test different directions
-	const PomColors currentColor = m_pomColors[row][column];
+	const PomColor currentColor = m_pomColors[row][column];
 	if(currentColor == colorToMatch)
 		matchedIndices.Add({
 			row, column

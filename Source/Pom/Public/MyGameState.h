@@ -29,7 +29,7 @@ public:
 	void SpawnNewPom();
 
 	UFUNCTION(BlueprintCallable)
-	void SetPomColorPosition(int row, int column, PomColors color, APomBase* pom);
+	void SetPomColorPosition(int row, int column, PomColor color, APomBase* pom);
 
 	UFUNCTION(BlueprintCallable)
 	void Lose();
@@ -39,7 +39,7 @@ public:
 	
 	UFUNCTION(BlueprintCallable)
 	void ClearPoms();
-	void CheckPom(int row, int column, PomColors& colorToMatch, TArray<ArrayIndex>& matchedIndices);
+	void CheckPom(int row, int column, PomColor& colorToMatch, TArray<ArrayIndex>& matchedIndices);
 
 public:
 	UPROPERTY(EditDefaultsOnly, Category="Paramters")
@@ -58,7 +58,7 @@ private:
 private:
 	bool m_gameOver;
 	TArray<TArray<APomBase*>> m_poms;
-	TArray<TArray<PomColors>> m_pomColors;
+	TArray<TArray<PomColor>> m_pomColors;
 	TArray<TArray<bool>> m_shouldPositionBeCleared;
 	TArray<TArray<bool>> m_explored;
 	
