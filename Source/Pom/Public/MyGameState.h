@@ -23,7 +23,7 @@ class POM_API AMyGameState : public AGameStateBase
 	GENERATED_BODY()
 public:
 	AMyGameState();
-	virtual void BeginPlay() override;
+	
 	
 	UFUNCTION(BlueprintCallable)
 	void SpawnNewPom();
@@ -31,11 +31,14 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void SetPomColorPosition(int row, int column, PomColor color, APomBase* pom);
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
 	void Lose();
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
 	void Restart();
+
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
+	void SpawnRow();
 	
 	UFUNCTION(BlueprintCallable)
 	void ClearPoms();
@@ -44,19 +47,23 @@ public:
 public:
 	UPROPERTY(EditDefaultsOnly, Category="Paramters")
 	TSubclassOf<AActor> PomClass;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="CPP")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FTransform m_spawnPosition;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="CPP")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int32 COUNT_TO_CLEAR = 3;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="CPP")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int32 COLUMN_COUNT = 5;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 ROWS_TO_SPAWN = 2;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool m_gameOver;
 	
 private:
 	void ResetArray(TArray<TArray<bool>>& arr);
 	bool TestIfArrayIsValid(TArray<TArray<bool>> arr, int32 row, int32 col);
 	
 private:
-	bool m_gameOver;
+	
 	TArray<TArray<APomBase*>> m_poms;
 	TArray<TArray<PomColor>> m_pomColors;
 	TArray<TArray<bool>> m_shouldPositionBeCleared;

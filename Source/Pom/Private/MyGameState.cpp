@@ -17,11 +17,6 @@ AMyGameState::AMyGameState()
 	m_nullptrArray.Init(nullptr, COLUMN_COUNT);
 }
 
-void AMyGameState::BeginPlay()
-{
-	SpawnNewPom();
-}
-
 void AMyGameState::SpawnNewPom()
 {
 	const auto spawnedActor = GetWorld()->SpawnActor(PomClass, &m_spawnPosition, m_spawnParameters);
@@ -59,7 +54,7 @@ void AMyGameState::SetPomColorPosition(int row, int column, PomColor color, APom
 	m_poms[row][column] = pom;
 }
 
-void AMyGameState::Lose()
+void AMyGameState::Lose_Implementation()
 {
 	m_gameOver = true;
 #if UE_BUILD_DEBUG
@@ -67,9 +62,33 @@ void AMyGameState::Lose()
 	#endif
 }
 
-void AMyGameState::Restart()
+void AMyGameState::Restart_Implementation()
 {
 	m_gameOver = false;
+}
+
+void AMyGameState::SpawnRow_Implementation()
+{
+	UWorld* world = GetWorld();
+	const int32 xPos = -20;
+	const int32 columnDistance = 100;
+	FTransform spawnTransform;
+	spawnTransform.SetComponents(
+	FQuat::MakeFromEuler(FVector(0)),
+	FVector(xPos, 0, 0),
+	FVector(1)
+	);
+	
+	for(int32 i = 0; i < COLUMN_COUNT; ++i)
+	{
+		const int32 yOffset = (i - 2) * columnDistance;
+		spawnTransform.SetLocation(
+			FVector(xPos, yOffset, 0)
+		);
+		AActor* spawnedPom = world->SpawnActorAbsolute(PomClass, spawnTransform);
+		APomBase* pom = Cast<APomBase>(spawnedPom);
+		pom->BecomeInactive();
+	}
 }
 
 void AMyGameState::ClearPoms()
