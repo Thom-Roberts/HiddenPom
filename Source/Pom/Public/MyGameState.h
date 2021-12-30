@@ -39,6 +39,9 @@ public:
 
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
 	void SpawnRow();
+
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
+	void SpawnInitialRow();
 	
 	UFUNCTION(BlueprintCallable)
 	void ClearPoms();
@@ -67,11 +70,10 @@ private:
 	TArray<TArray<PomColor>> m_pomColors;
 	TArray<TArray<bool>> m_shouldPositionBeCleared;
 	TArray<TArray<bool>> m_explored;
-	
+
+	// Used for populating initial setting of arrays
 	TArray<bool> m_falseArray;
 	TArray<APomBase*> m_nullptrArray;
 
 	FActorSpawnParameters m_spawnParameters;
-	// Used to ensure that first row spawn doesn't trigger overlap events
-	bool m_shouldTriggerOverlaps = false;
 };
