@@ -12,7 +12,7 @@ AMyGameState::AMyGameState()
 
 	m_spawnParameters = FActorSpawnParameters();
 	m_spawnParameters.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::DontSpawnIfColliding;
-
+	
 	m_falseArray.Init(false, COLUMN_COUNT);
 	m_nullptrArray.Init(nullptr, COLUMN_COUNT);
 }
@@ -87,8 +87,11 @@ void AMyGameState::SpawnRow_Implementation()
 		);
 		AActor* spawnedPom = world->SpawnActorAbsolute(PomClass, spawnTransform);
 		APomBase* pom = Cast<APomBase>(spawnedPom);
+		pom->m_shouldTriggerOverlaps = m_shouldTriggerOverlaps;
 		pom->BecomeInactive();
 	}
+
+	m_shouldTriggerOverlaps = true;
 }
 
 void AMyGameState::ClearPoms()

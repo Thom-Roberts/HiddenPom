@@ -63,7 +63,6 @@ private:
 	bool TestIfArrayIsValid(TArray<TArray<bool>> arr, int32 row, int32 col);
 	
 private:
-	
 	TArray<TArray<APomBase*>> m_poms;
 	TArray<TArray<PomColor>> m_pomColors;
 	TArray<TArray<bool>> m_shouldPositionBeCleared;
@@ -73,4 +72,6 @@ private:
 	TArray<APomBase*> m_nullptrArray;
 
 	FActorSpawnParameters m_spawnParameters;
+	// Used to ensure that first row spawn doesn't trigger overlap events
+	bool m_shouldTriggerOverlaps = false;
 };

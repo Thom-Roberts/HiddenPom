@@ -14,14 +14,14 @@ class POM_API APomBase : public AActor
 public:	
 	// Sets default values for this actor's properties
 	APomBase();
-
-protected:
-
-public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
 	void BecomeInactive();
+	
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool m_shouldTriggerOverlaps = true;
 };
 
 UENUM(BlueprintType)
