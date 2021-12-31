@@ -18,3 +18,8 @@ void APomBase::Tick(float DeltaTime)
 
 }
 
+void APomBase::SetPosition_Implementation(FVector position)
+{
+	SetActorLocation(position);
+}
+

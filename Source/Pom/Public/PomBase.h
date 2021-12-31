@@ -18,6 +18,8 @@ public:
 	virtual void Tick(float DeltaTime) override;
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
 	void BecomeInactive();
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
+	void SetPosition(FVector position);
 	
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)

@@ -41,14 +41,14 @@ void AMyGameState::SetPomColorPosition(int row, int column, PomColor color, APom
 		temp.Init(PomColor::None, COLUMN_COUNT);
 		m_pomColors.Add(temp);
 	}
+	
 	if(m_pomColors[row].Num() < COLUMN_COUNT)
 		m_pomColors[row].Init(PomColor::None, COLUMN_COUNT);
 	m_pomColors[row][column] = color;
 
 	while(m_poms.Num() <= row)
-	{
 		m_poms.Add(m_nullptrArray);
-	}
+	
 	if(m_poms[row].Num() < COLUMN_COUNT)
 		m_poms[row].Init(nullptr, COLUMN_COUNT);
 	m_poms[row][column] = pom;
@@ -79,19 +79,17 @@ void AMyGameState::SpawnRow_Implementation()
 	FVector(1)
 	);
 	
-	for(int32 i = 0; i < COLUMN_COUNT; ++i)
+	for(int32 i = 0; i < COLUMN_COUNT; i++)
 	{
 		const int32 yOffset = (i - 2) * columnDistance;
 		spawnTransform.SetLocation(
-			FVector(xPos, yOffset, 0)
+			CreatePomPositionVector(0, i)
 		);
 		AActor* spawnedPom = world->SpawnActorAbsolute(PomClass, spawnTransform);
 		APomBase* pom = Cast<APomBase>(spawnedPom);
 		pom->m_shouldTriggerOverlaps = true;
 		pom->BecomeInactive();
 	}
-
-	printf("Temp");
 }
 
 void AMyGameState::SpawnInitialRow_Implementation()
@@ -107,32 +105,30 @@ void AMyGameState::SpawnInitialRow_Implementation()
 	FVector(1)
 	);
 	
-	for(int32 i = 0; i < COLUMN_COUNT; ++i)
+	for(int32 i = 0; i < COLUMN_COUNT; i++)
 	{
 		const int32 yOffset = (i - 2) * columnDistance;
 		spawnTransform.SetLocation(
-			FVector(xPos, yOffset, 0)
+			CreatePomPositionVector(0, i)
 		);
 		AActor* spawnedPom = world->SpawnActorAbsolute(PomClass, spawnTransform);
 		APomBase* pom = Cast<APomBase>(spawnedPom);
 		pom->m_shouldTriggerOverlaps = false;
 		pom->BecomeInactive();
 	}
-
-	printf("");
 }
 
-void AMyGameState::ClearPoms()
+int32 AMyGameState::ClearPoms()
 {
 	// Initialize arrays to false
 	ResetArray(m_shouldPositionBeCleared);
 	
 	TArray<ArrayIndex> matchedIndices;
 	// See if poms should have themselves removed
-	for(int i = 0; i < m_pomColors.Num(); ++i)
+	for(int i = 0; i < m_pomColors.Num(); i++)
 	{
 		const auto currentRow = m_pomColors[i];
-		for(int j = 0; j < currentRow.Num(); ++j)
+		for(int j = 0; j < currentRow.Num(); j++)
 		{
 			if(m_pomColors[i][j] == PomColor::None)
 				continue;
@@ -152,10 +148,11 @@ void AMyGameState::ClearPoms()
 	}
 
 	// Remove all marked poms
-	for(int i = 0; i < m_shouldPositionBeCleared.Num(); ++i)
+	int32 pomClearedCount = 0;
+	for(int i = 0; i < m_shouldPositionBeCleared.Num(); i++)
 	{
 		const auto currentRow = m_shouldPositionBeCleared[i];
-		for(int j = 0; j < currentRow.Num(); ++j)
+		for(int j = 0; j < currentRow.Num(); j++)
 		{
 			if(currentRow[j])
 			{
@@ -166,9 +163,12 @@ void AMyGameState::ClearPoms()
 #endif
 				m_poms[i][j] = nullptr;
 				m_pomColors[i][j] = PomColor::None;
+				pomClearedCount++;
 			}
 		}
 	}
+
+	return pomClearedCount;
 }
 
 void AMyGameState::CheckPom(int row, int column, PomColor& colorToMatch, TArray<ArrayIndex>& matchedIndices)
@@ -181,19 +181,20 @@ void AMyGameState::CheckPom(int row, int column, PomColor& colorToMatch, TArray<
 	
 	m_explored[row][column] = true;
 
+	// This has already been targeted by a previous checkPom call
 	if(m_shouldPositionBeCleared[row][column])
 		return;
 	
-	if(m_pomColors[row][column] == PomColor::None)
+	const PomColor currentColor = m_pomColors[row][column];
+	// Color doesn't match
+	if(currentColor != colorToMatch)
 		return;
 	
-	// Test different directions
-	const PomColor currentColor = m_pomColors[row][column];
-	if(currentColor == colorToMatch)
-		matchedIndices.Add({
-			row, column
-		});
+	matchedIndices.Add({
+		row, column
+	});
 	
+	// Test different directions
 	if(column > 0)
 		CheckPom(row, column - 1, colorToMatch, matchedIndices);
 	if(column < COLUMN_COUNT)
@@ -202,6 +203,33 @@ void AMyGameState::CheckPom(int row, int column, PomColor& colorToMatch, TArray<
 		CheckPom(row - 1, column, colorToMatch, matchedIndices);
 	if(row < m_pomColors.Num())
 		CheckPom(row + 1, column, colorToMatch, matchedIndices);
+}
+
+void AMyGameState::MovePomsDown()
+{
+	// Adjust array
+	for(int i = m_poms.Num() - 1; i > 1; i--)
+	{
+		TArray<APomBase*>& currentRow = m_poms[i];
+		for(int j = 0; j < currentRow.Num(); j++)
+		{
+			if(!IsValid(m_poms[i-1][j]))
+			{
+				m_poms[i-1][j] = currentRow[j];
+				currentRow[j] = nullptr;
+			}
+		}		
+	}
+
+	// Adjust positions
+	for(int i = 0; i < m_poms.Num(); i++)
+	{
+		TArray<APomBase*>& currentRow = m_poms[i];
+		for(int j = 0; j < currentRow.Num(); j++)
+		{
+			currentRow[j]->SetPosition(CreatePomPositionVector(i, j));
+		}
+	}
 }
 
 void AMyGameState::ResetArray(TArray<TArray<bool>>& arr)
@@ -221,4 +249,13 @@ bool AMyGameState::TestIfArrayIsValid(TArray<TArray<bool>> arr, int32 row, int32
 	const bool invalidCol = col < 0 || col > COLUMN_COUNT - 1;
 
 	return !invalidRow && !invalidCol;
+}
+
+FVector AMyGameState::CreatePomPositionVector(int32 row, int32 column)
+{
+	const int32 rowDistance = 100;
+	const int32 columnDistance = 100;
+	const int32 xPosition = -20;
+	const int32 yPosition = (column - 2) * columnDistance;
+	return FVector(xPosition, yPosition, row * rowDistance);
 }

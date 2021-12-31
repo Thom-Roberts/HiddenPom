@@ -44,8 +44,11 @@ public:
 	void SpawnInitialRow();
 	
 	UFUNCTION(BlueprintCallable)
-	void ClearPoms();
+	int32 ClearPoms();
 	void CheckPom(int row, int column, PomColor& colorToMatch, TArray<ArrayIndex>& matchedIndices);
+
+	UFUNCTION(BlueprintCallable)
+	void MovePomsDown();
 
 public:
 	UPROPERTY(EditDefaultsOnly, Category="Paramters")
@@ -64,6 +67,7 @@ public:
 private:
 	void ResetArray(TArray<TArray<bool>>& arr);
 	bool TestIfArrayIsValid(TArray<TArray<bool>> arr, int32 row, int32 col);
+	FVector CreatePomPositionVector(int32 row, int32 column);
 	
 private:
 	TArray<TArray<APomBase*>> m_poms;
