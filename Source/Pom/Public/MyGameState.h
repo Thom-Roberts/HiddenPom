@@ -69,6 +69,7 @@ private:
 	void ResetArray(TArray<TArray<bool>>& arr);
 	bool TestIfArrayIsValid(TArray<TArray<bool>> arr, int32 row, int32 col);
 	FVector CreatePomPositionVector(int32 row, int32 column);
+	void ClearPomFromPosition(int32 row, int32 column);
 	
 private:
 	TArray<TArray<APomBase*>> m_poms;

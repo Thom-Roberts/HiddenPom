@@ -161,8 +161,7 @@ void AMyGameState::ClearPoms(int32& countCleared)
 				auto message = TEXT("Deleting pom at position %d %d", i, j);
 				GEngine->AddOnScreenDebugMessage(-1, 12.f, FColor::White, message);
 #endif
-				m_poms[i][j] = nullptr;
-				m_pomColors[i][j] = PomColor::None;
+				ClearPomFromPosition(i, j);
 				countCleared++;
 			}
 		}
@@ -205,6 +204,7 @@ void AMyGameState::CheckPom(int row, int column, PomColor& colorToMatch, TArray<
 
 void AMyGameState::MovePomsDown()
 {
+	printf("Before move");
 	// Adjust array
 	for(int i = m_poms.Num() - 1; i > 0; i--)
 	{
@@ -214,11 +214,13 @@ void AMyGameState::MovePomsDown()
 			if(!m_poms[i-1][j])
 			{
 				m_poms[i-1][j] = currentRow[j];
-				currentRow[j] = nullptr;
+				m_pomColors[i-1][j] = m_pomColors[i][j];
+				ClearPomFromPosition(i, j);
 			}
 		}		
 	}
 
+	printf("After move");
 	// Adjust positions
 	for(int i = 0; i < m_poms.Num(); i++)
 	{
@@ -257,4 +259,10 @@ FVector AMyGameState::CreatePomPositionVector(int32 row, int32 column)
 	const int32 xPosition = -20;
 	const int32 yPosition = (column - 2) * columnDistance;
 	return FVector(xPosition, yPosition, row * rowDistance);
+}
+
+void AMyGameState::ClearPomFromPosition(int32 row, int32 column)
+{
+	m_poms[row][column] = nullptr;
+	m_pomColors[row][column] = PomColor::None;
 }
