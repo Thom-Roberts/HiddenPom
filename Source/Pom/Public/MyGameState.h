@@ -26,10 +26,10 @@ public:
 	
 	
 	UFUNCTION(BlueprintCallable)
-	void SpawnNewPom();
+	APomBase* SpawnNewPomInPreviewPosition();
 
 	UFUNCTION(BlueprintCallable)
-	void SetActivePom(APomBase* newPom = nullptr);
+	void SetActivePom(UPARAM(DisplayName="Success") bool& success, APomBase* newPom = nullptr);
 	
 	UFUNCTION(BlueprintCallable)
 	void SetPomColorPosition(int row, int column, PomColor color, APomBase* pom);
@@ -58,7 +58,7 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category="Paramters")
 	TSubclassOf<AActor> PomClass;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FTransform m_spawnPosition;
+	FTransform m_previewPosition;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FTransform m_activePosition;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)

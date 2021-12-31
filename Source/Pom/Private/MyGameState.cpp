@@ -3,7 +3,7 @@
 
 AMyGameState::AMyGameState()
 {
-	m_spawnPosition.SetComponents(
+	m_previewPosition.SetComponents(
 	FQuat::MakeFromEuler(FVector(0)),
 	FVector(-20, 0, 550),
 	FVector(1)
@@ -23,28 +23,32 @@ AMyGameState::AMyGameState()
 	m_nullptrArray.Init(nullptr, COLUMN_COUNT);
 }
 
-void AMyGameState::SpawnNewPom()
+APomBase* AMyGameState::SpawnNewPomInPreviewPosition()
 {
-	const auto spawnedActor = GetWorld()->SpawnActor(PomClass, &m_spawnPosition, m_spawnParameters);
-	if(IsValid(spawnedActor))
+	const auto spawnedActor = GetWorld()->SpawnActor(PomClass, &m_previewPosition, m_spawnParameters);
+	if(!IsValid(spawnedActor))
 	{
-		APawn* playerPawn = UGameplayStatics::GetPlayerPawn(GetWorld(), 0);
-		APlayerBase* castPawn = Cast<APlayerBase>(playerPawn);
-		castPawn->SetCurrentPom(Cast<APomBase>(spawnedActor));
+		printf("Failed to spawn actor in preview position. This should never happen");
+		return nullptr;
 	}
-	// Could not spawn
-	else
-	{
-		Lose();
-	}
+	return Cast<APomBase>(spawnedActor);
 }
 
-// TODO: 
-void AMyGameState::SetActivePom(APomBase* newPom)
+// TODO: Implement preview pom
+void AMyGameState::SetActivePom(bool& success, APomBase* newPom)
 {
 	if(newPom == nullptr)
 		newPom = nextPom;
-	newPom->SetActorLocation(m_spawnPosition.GetLocation());
+	const bool moved = newPom->SetActorLocation(m_activePosition.GetLocation());
+	if(!moved)
+	{
+		success = false;
+		return;
+	}
+	APawn* playerPawn = UGameplayStatics::GetPlayerPawn(GetWorld(), 0);
+	APlayerBase* castPawn = Cast<APlayerBase>(playerPawn);
+	castPawn->SetCurrentPom(Cast<APomBase>(newPom));
+	success = true;
 }
 
 void AMyGameState::SetPomColorPosition(int row, int column, PomColor color, APomBase* pom)
