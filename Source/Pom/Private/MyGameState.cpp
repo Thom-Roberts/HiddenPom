@@ -4,10 +4,16 @@
 AMyGameState::AMyGameState()
 {
 	m_spawnPosition.SetComponents(
-		FQuat::MakeFromEuler(FVector(0)),
-		FVector(-20, 0, 550),
-		FVector(1)
+	FQuat::MakeFromEuler(FVector(0)),
+	FVector(-20, 0, 550),
+	FVector(1)
 	);
+	m_activePosition.SetComponents(
+	FQuat::MakeFromEuler(FVector(0)),
+	FVector(-20, 0, 550),
+	FVector(1)
+	);
+	
 	m_gameOver = false;
 
 	m_spawnParameters = FActorSpawnParameters();
@@ -31,6 +37,14 @@ void AMyGameState::SpawnNewPom()
 	{
 		Lose();
 	}
+}
+
+// TODO: 
+void AMyGameState::SetActivePom(APomBase* newPom)
+{
+	if(newPom == nullptr)
+		newPom = nextPom;
+	newPom->SetActorLocation(m_spawnPosition.GetLocation());
 }
 
 void AMyGameState::SetPomColorPosition(int row, int column, PomColor color, APomBase* pom)

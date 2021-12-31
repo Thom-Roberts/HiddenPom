@@ -29,6 +29,9 @@ public:
 	void SpawnNewPom();
 
 	UFUNCTION(BlueprintCallable)
+	void SetActivePom(APomBase* newPom = nullptr);
+	
+	UFUNCTION(BlueprintCallable)
 	void SetPomColorPosition(int row, int column, PomColor color, APomBase* pom);
 
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
@@ -47,7 +50,7 @@ public:
 	// Returning like this let's me change what the return looks like in BluePrints
 	void ClearPoms(UPARAM(DisplayName="Amount Cleared") int32& countCleared);
 	void CheckPom(int row, int column, PomColor& colorToMatch, TArray<ArrayIndex>& matchedIndices);
-
+	
 	UFUNCTION(BlueprintCallable)
 	void MovePomsDown();
 
@@ -57,6 +60,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FTransform m_spawnPosition;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FTransform m_activePosition;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int32 COUNT_TO_CLEAR = 3;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int32 COLUMN_COUNT = 5;
@@ -64,6 +69,8 @@ public:
 	int32 ROWS_TO_SPAWN = 2;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool m_gameOver;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	APomBase* nextPom = nullptr;
 	
 private:
 	void ResetArray(TArray<TArray<bool>>& arr);
