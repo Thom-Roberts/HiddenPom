@@ -44,7 +44,8 @@ public:
 	void SpawnInitialRow();
 	
 	UFUNCTION(BlueprintCallable)
-	int32 ClearPoms();
+	// Returning like this let's me change what the return looks like in BluePrints
+	void ClearPoms(UPARAM(DisplayName="Amount Cleared") int32& countCleared);
 	void CheckPom(int row, int column, PomColor& colorToMatch, TArray<ArrayIndex>& matchedIndices);
 
 	UFUNCTION(BlueprintCallable)

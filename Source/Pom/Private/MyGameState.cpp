@@ -118,7 +118,7 @@ void AMyGameState::SpawnInitialRow_Implementation()
 	}
 }
 
-int32 AMyGameState::ClearPoms()
+void AMyGameState::ClearPoms(int32& countCleared)
 {
 	// Initialize arrays to false
 	ResetArray(m_shouldPositionBeCleared);
@@ -148,7 +148,7 @@ int32 AMyGameState::ClearPoms()
 	}
 
 	// Remove all marked poms
-	int32 pomClearedCount = 0;
+	countCleared = 0;
 	for(int i = 0; i < m_shouldPositionBeCleared.Num(); i++)
 	{
 		const auto currentRow = m_shouldPositionBeCleared[i];
@@ -163,12 +163,10 @@ int32 AMyGameState::ClearPoms()
 #endif
 				m_poms[i][j] = nullptr;
 				m_pomColors[i][j] = PomColor::None;
-				pomClearedCount++;
+				countCleared++;
 			}
 		}
 	}
-
-	return pomClearedCount;
 }
 
 void AMyGameState::CheckPom(int row, int column, PomColor& colorToMatch, TArray<ArrayIndex>& matchedIndices)
@@ -208,12 +206,12 @@ void AMyGameState::CheckPom(int row, int column, PomColor& colorToMatch, TArray<
 void AMyGameState::MovePomsDown()
 {
 	// Adjust array
-	for(int i = m_poms.Num() - 1; i > 1; i--)
+	for(int i = m_poms.Num() - 1; i > 0; i--)
 	{
 		TArray<APomBase*>& currentRow = m_poms[i];
 		for(int j = 0; j < currentRow.Num(); j++)
 		{
-			if(!IsValid(m_poms[i-1][j]))
+			if(!m_poms[i-1][j])
 			{
 				m_poms[i-1][j] = currentRow[j];
 				currentRow[j] = nullptr;
@@ -227,7 +225,8 @@ void AMyGameState::MovePomsDown()
 		TArray<APomBase*>& currentRow = m_poms[i];
 		for(int j = 0; j < currentRow.Num(); j++)
 		{
-			currentRow[j]->SetPosition(CreatePomPositionVector(i, j));
+			if(currentRow[j] != nullptr)
+				currentRow[j]->SetPosition(CreatePomPositionVector(i, j));
 		}
 	}
 }
