@@ -34,6 +34,8 @@ public:
 	void SetPomColor(PomColor color);
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
 	PomColor GetPomColor();
+	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
+	void FadeThenDestroy();
 	
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)

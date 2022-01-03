@@ -189,11 +189,7 @@ void AMyGameState::ClearPoms(int32& countCleared)
 		{
 			if(currentRow[j])
 			{
-				GetWorld()->DestroyActor(m_poms[i][j]);
-#if UE_BUILD_DEBUG
-				auto message = TEXT("Deleting pom at position %d %d", i, j);
-				GEngine->AddOnScreenDebugMessage(-1, 12.f, FColor::White, message);
-#endif
+				m_poms[i][j]->FadeThenDestroy();
 				ClearPomFromPosition(i, j);
 				countCleared++;
 			}
