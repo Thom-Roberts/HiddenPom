@@ -110,7 +110,7 @@ void AMyGameState::SpawnRow_Implementation()
 	}
 }
 
-void AMyGameState::SpawnInitialRow_Implementation()
+void AMyGameState::SpawnInitialRows_Implementation()
 {
 	UWorld* world = GetWorld();
 	const int32 xPos = -20;
@@ -125,7 +125,6 @@ void AMyGameState::SpawnInitialRow_Implementation()
 	
 	for(int32 i = 0; i < COLUMN_COUNT; i++)
 	{
-		const int32 yOffset = (i - 2) * columnDistance;
 		spawnTransform.SetLocation(
 			CreatePomPositionVector(0, i)
 		);
@@ -133,6 +132,22 @@ void AMyGameState::SpawnInitialRow_Implementation()
 		APomBase* pom = Cast<APomBase>(spawnedPom);
 		pom->m_shouldTriggerOverlaps = false;
 		pom->BecomeInactive();
+	}
+
+	printf("Above would be cleared");
+	// Ensure we don't have any initial clearings
+	while(WouldPomsBeCleared())
+	{
+		// Randomize colors and try again
+		for(int32 i = 0; i < m_poms.Num(); i++)
+		{
+			for(int32 j = 0; j < COLUMN_COUNT; j++)
+			{
+				PomColor color = GenerateRandomColor();
+				m_poms[i][j]->SetPomColor(color);
+				m_pomColors[i][j] = color;
+			}
+		}
 	}
 }
 
@@ -283,4 +298,52 @@ void AMyGameState::ClearPomFromPosition(int32 row, int32 column)
 {
 	m_poms[row][column] = nullptr;
 	m_pomColors[row][column] = PomColor::None;
+}
+
+bool AMyGameState::WouldPomsBeCleared()
+{
+	bool foundMatch = false;
+	TArray<ArrayIndex> matchedIndices;
+
+	// Initialize the cleared array (otherwise overflow will occur)
+	ResetArray(m_shouldPositionBeCleared);
+
+	// See if poms should have themselves removed
+	for(int i = 0; i < m_pomColors.Num(); i++)
+	{
+		const auto currentRow = m_pomColors[i];
+		for(int j = 0; j < currentRow.Num(); j++)
+		{
+			if(m_pomColors[i][j] == PomColor::None)
+				continue;
+			matchedIndices.Empty();
+			ResetArray(m_explored);
+			CheckPom(i, j, m_pomColors[i][j], matchedIndices);
+			if(matchedIndices.Num() >= COUNT_TO_CLEAR)
+			{
+				foundMatch = true;
+				break;
+			}
+		}
+	}
+
+	ResetArray(m_explored);
+	return foundMatch;
+}
+
+PomColor AMyGameState::GenerateRandomColor(PomColor colorToExclude)
+{
+	// TODO: Improve this awful func :D
+	TArray<PomColor> colors;
+	if(colorToExclude != PomColor::Red)
+		colors.Add(PomColor::Red);
+	if(colorToExclude != PomColor::Yellow)
+		colors.Add(PomColor::Yellow);
+	if(colorToExclude != PomColor::Green)
+		colors.Add(PomColor::Green);
+	if(colorToExclude != PomColor::Blue)
+		colors.Add(PomColor::Blue);
+	
+	const int32 randomIndex = FMath::RandRange(0, colors.Num() - 1);
+	return colors[randomIndex];
 }

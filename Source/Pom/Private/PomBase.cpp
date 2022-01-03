@@ -18,6 +18,11 @@ void APomBase::Tick(float DeltaTime)
 
 }
 
+PomColor APomBase::GetPomColor_Implementation()
+{
+	return pomColor;
+}
+
 void APomBase::SetPosition_Implementation(FVector position)
 {
 	SetActorLocation(position);

@@ -24,7 +24,6 @@ class POM_API AMyGameState : public AGameStateBase
 public:
 	AMyGameState();
 	
-	
 	UFUNCTION(BlueprintCallable)
 	APomBase* SpawnNewPomInPreviewPosition();
 
@@ -44,7 +43,7 @@ public:
 	void SpawnRow();
 
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
-	void SpawnInitialRow();
+	void SpawnInitialRows();
 	
 	UFUNCTION(BlueprintCallable)
 	// Returning like this let's me change what the return looks like in BluePrints
@@ -77,6 +76,9 @@ private:
 	bool TestIfArrayIsValid(TArray<TArray<bool>> arr, int32 row, int32 col);
 	FVector CreatePomPositionVector(int32 row, int32 column);
 	void ClearPomFromPosition(int32 row, int32 column);
+	bool WouldPomsBeCleared();
+	// Utility function for the GenerateInitialRow function
+	PomColor GenerateRandomColor(PomColor colorToExclude = PomColor::None);
 	
 private:
 	TArray<TArray<APomBase*>> m_poms;
