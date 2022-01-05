@@ -246,11 +246,12 @@ void AMyGameState::MovePomsDown()
 			// Add row as available to move to
 			if(!m_poms[i][j])
 				emptySpots.Enqueue(i);
-			// There is a pom here currently
+			// There is a pom here currently, can we move it down?
 			else
 			{
 				int32 lowestRow;
 				const bool hadValue = emptySpots.Dequeue(lowestRow);
+				// The array is not empty (i.e. there is an index underneath our current position)
 				if(hadValue)
 				{
 					m_poms[lowestRow][j] = m_poms[i][j];
