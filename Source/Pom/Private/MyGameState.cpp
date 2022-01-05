@@ -21,6 +21,8 @@ AMyGameState::AMyGameState()
 	
 	m_falseArray.Init(false, COLUMN_COUNT);
 	m_nullptrArray.Init(nullptr, COLUMN_COUNT);
+
+	m_currentClearScoreValue = m_initialClearScoreValue;
 }
 
 APomBase* AMyGameState::SpawnNewPomInPreviewPosition()
@@ -151,11 +153,11 @@ void AMyGameState::SpawnInitialRows_Implementation()
 	}
 }
 
-void AMyGameState::ClearPoms(int32& countCleared)
+void AMyGameState::ClearPoms(int32& groupsCleared)
 {
 	// Initialize arrays to false
 	ResetArray(m_shouldPositionBeCleared);
-	
+	groupsCleared = 0;
 	TArray<ArrayIndex> matchedIndices;
 	// See if poms should have themselves removed
 	for(int i = 0; i < m_pomColors.Num(); i++)
@@ -176,12 +178,12 @@ void AMyGameState::ClearPoms(int32& countCleared)
 						[matchedIndex.row]
 						[matchedIndex.column] = true;
 				}
+				groupsCleared++;
 			}
 		}
 	}
 
 	// Remove all marked poms
-	countCleared = 0;
 	for(int i = 0; i < m_shouldPositionBeCleared.Num(); i++)
 	{
 		const auto currentRow = m_shouldPositionBeCleared[i];
@@ -191,7 +193,6 @@ void AMyGameState::ClearPoms(int32& countCleared)
 			{
 				m_poms[i][j]->FadeThenDestroy();
 				ClearPomFromPosition(i, j);
-				countCleared++;
 			}
 		}
 	}
@@ -233,7 +234,7 @@ void AMyGameState::CheckPom(int row, int column, PomColor& colorToMatch, TArray<
 
 void AMyGameState::MovePomsDown()
 {
-	printf("Before move");
+	// TODO: Figure out a more efficient way to do this
 	// Adjust array
 	for(int i = m_poms.Num() - 1; i > 0; i--)
 	{
@@ -260,6 +261,16 @@ void AMyGameState::MovePomsDown()
 				currentRow[j]->SetPosition(CreatePomPositionVector(i, j));
 		}
 	}
+}
+
+void AMyGameState::IncreaseScoreBonus()
+{
+	m_currentClearScoreValue += clearScoreIncrease;
+}
+
+void AMyGameState::ResetScoreBonus()
+{
+	m_currentClearScoreValue = m_initialClearScoreValue;
 }
 
 void AMyGameState::ResetArray(TArray<TArray<bool>>& arr)
