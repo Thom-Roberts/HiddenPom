@@ -236,21 +236,33 @@ void AMyGameState::MovePomsDown()
 {
 	// TODO: Figure out a more efficient way to do this
 	// Adjust array
-	for(int i = m_poms.Num() - 1; i > 0; i--)
+	TQueue<int32> emptySpots;
+	// Go column by column
+	for(int j = 0; j < COLUMN_COUNT; j++)
 	{
-		TArray<APomBase*>& currentRow = m_poms[i];
-		for(int j = 0; j < currentRow.Num(); j++)
+		emptySpots.Empty();
+		for(int i = 0; i < m_poms.Num(); i++)
 		{
-			if(!m_poms[i-1][j])
+			// Add row as available to move to
+			if(!m_poms[i][j])
+				emptySpots.Enqueue(i);
+			// There is a pom here currently
+			else
 			{
-				m_poms[i-1][j] = currentRow[j];
-				m_pomColors[i-1][j] = m_pomColors[i][j];
-				ClearPomFromPosition(i, j);
+				int32 lowestRow;
+				const bool hadValue = emptySpots.Dequeue(lowestRow);
+				if(hadValue)
+				{
+					m_poms[lowestRow][j] = m_poms[i][j];
+					m_pomColors[lowestRow][j] = m_pomColors[i][j];
+					ClearPomFromPosition(i, j);
+					// Our current position is now open
+					emptySpots.Enqueue(i);
+				}
 			}
-		}		
+		}
 	}
 
-	printf("After move");
 	// Adjust positions
 	for(int i = 0; i < m_poms.Num(); i++)
 	{
