@@ -191,7 +191,7 @@ void AMyGameState::ClearPoms(int32& groupsCleared)
 		{
 			if(currentRow[j])
 			{
-				m_poms[i][j]->FadeThenDestroy();
+				m_poms[i][j]->FadeThenDestroy(m_currentClearScoreValue);
 				ClearPomFromPosition(i, j);
 			}
 		}

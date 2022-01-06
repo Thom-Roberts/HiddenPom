@@ -35,7 +35,7 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
 	PomColor GetPomColor();
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
-	void FadeThenDestroy();
+	void FadeThenDestroy(UPARAM(DisplayName="Points")int32 points = 0);
 	
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
