@@ -32,7 +32,7 @@ void APlayerBase::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 
 }
 
-void APlayerBase::SetCurrentPom(APomBase* pom)
+void APlayerBase::SetCurrentPom_Implementation(APomBase* pom)
 {
 	currentPom = pom;
 }

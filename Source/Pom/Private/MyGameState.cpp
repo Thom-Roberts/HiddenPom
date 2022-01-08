@@ -27,7 +27,7 @@ AMyGameState::AMyGameState()
 
 APomBase* AMyGameState::SpawnNewPomInPreviewPosition()
 {
-	const auto spawnedActor = GetWorld()->SpawnActor(PomClass, &m_previewPosition, m_spawnParameters);
+	const auto spawnedActor = GetWorld()->SpawnActor(PomClass, &m_previewPosition);
 	if(!IsValid(spawnedActor))
 	{
 		printf("Failed to spawn actor in preview position. This should never happen");
@@ -36,8 +36,7 @@ APomBase* AMyGameState::SpawnNewPomInPreviewPosition()
 	return Cast<APomBase>(spawnedActor);
 }
 
-// TODO: Implement preview pom
-void AMyGameState::SetActivePom(bool& success, APomBase* newPom)
+void AMyGameState::SetActivePom(bool& success, APomBase* newPom, int32 playerIndex)
 {
 	if(newPom == nullptr)
 		newPom = nextPom;
@@ -47,7 +46,7 @@ void AMyGameState::SetActivePom(bool& success, APomBase* newPom)
 		success = false;
 		return;
 	}
-	APawn* playerPawn = UGameplayStatics::GetPlayerPawn(GetWorld(), 0);
+	APawn* playerPawn = UGameplayStatics::GetPlayerPawn(GetWorld(), playerIndex);
 	APlayerBase* castPawn = Cast<APlayerBase>(playerPawn);
 	castPawn->SetCurrentPom(Cast<APomBase>(newPom));
 	success = true;

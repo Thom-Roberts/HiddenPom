@@ -28,7 +28,7 @@ public:
 	APomBase* SpawnNewPomInPreviewPosition();
 
 	UFUNCTION(BlueprintCallable)
-	void SetActivePom(UPARAM(DisplayName="Success") bool& success, APomBase* newPom = nullptr);
+	void SetActivePom(UPARAM(DisplayName="Success") bool& success, APomBase* newPom = nullptr, UPARAM(DisplayName="Player Index")int32 playerIndex =0);
 	
 	UFUNCTION(BlueprintCallable)
 	void SetPomColorPosition(int row, int column, PomColor color, APomBase* pom);
@@ -101,7 +101,6 @@ private:
 	TArray<bool> m_falseArray;
 	TArray<APomBase*> m_nullptrArray;
     uint32 m_initialClearScoreValue = 10;
-
-
+	
 	FActorSpawnParameters m_spawnParameters;
 };

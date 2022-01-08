@@ -23,8 +23,8 @@ public:
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-	UFUNCTION(BlueprintCallable)
-	virtual void SetCurrentPom(APomBase* pom);
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
+	void SetCurrentPom(APomBase* pom);
 	
 protected:
 	// Called when the game starts or when spawned
