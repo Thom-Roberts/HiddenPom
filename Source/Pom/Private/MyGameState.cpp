@@ -133,6 +133,14 @@ void AMyGameState::SpawnInitialRows_Implementation()
 		APomBase* pom = Cast<APomBase>(spawnedPom);
 		pom->m_shouldTriggerOverlaps = false;
 		pom->BecomeInactive();
+
+		spawnTransform.SetLocation(
+			CreatePomPositionVector(2, i)
+		);
+		spawnedPom = world->SpawnActorAbsolute(PomClass, spawnTransform);
+		pom = Cast<APomBase>(spawnedPom);
+		pom->m_shouldTriggerOverlaps = false;
+		pom->BecomeInactive();
 	}
 
 	printf("Above would be cleared");
