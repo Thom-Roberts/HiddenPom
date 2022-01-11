@@ -21,7 +21,8 @@ AMyGameState::AMyGameState()
 	
 	m_falseArray.Init(false, COLUMN_COUNT);
 	m_nullptrArray.Init(nullptr, COLUMN_COUNT);
-
+	m_previewRowPoms.Init(nullptr, COLUMN_COUNT);
+	
 	m_currentClearScoreValue = m_initialClearScoreValue;
 }
 
@@ -86,36 +87,35 @@ void AMyGameState::Restart_Implementation()
 	m_gameOver = false;
 }
 
-void AMyGameState::SpawnRow_Implementation()
+TArray<APomBase*> AMyGameState::SpawnPreviewRow_Implementation()
 {
 	UWorld* world = GetWorld();
 	const int32 xPos = -20;
-	const int32 columnDistance = 100;
 	FTransform spawnTransform;
 	spawnTransform.SetComponents(
 	FQuat::MakeFromEuler(FVector(0)),
 	FVector(xPos, 0, 0),
 	FVector(1)
 	);
-	
+	TArray<APomBase*> poms;
 	for(int32 i = 0; i < COLUMN_COUNT; i++)
 	{
-		const int32 yOffset = (i - 2) * columnDistance;
-		spawnTransform.SetLocation(
-			CreatePomPositionVector(0, i)
-		);
-		AActor* spawnedPom = world->SpawnActorAbsolute(PomClass, spawnTransform);
+		// Set Z position based on the m_rowPreviewPosition
+		const auto positionVector = CreatePomPositionVector(0, i);
+		spawnTransform.SetLocation(FVector(xPos, positionVector.Y, m_rowPreviewZPosition));
+		AActor* spawnedPom = world->SpawnActorAbsolute(SinglePomClass, spawnTransform);
 		APomBase* pom = Cast<APomBase>(spawnedPom);
-		pom->m_shouldTriggerOverlaps = true;
-		pom->BecomeInactive();
+		pom->m_shouldTriggerOverlaps = false;
+		poms.Add(pom);
 	}
+
+	return poms;
 }
 
 void AMyGameState::SpawnInitialRows_Implementation()
 {
 	UWorld* world = GetWorld();
 	const int32 xPos = -20;
-	const int32 columnDistance = 100;
 
 	FTransform spawnTransform;
 	spawnTransform.SetComponents(
@@ -158,6 +158,11 @@ void AMyGameState::SpawnInitialRows_Implementation()
 			}
 		}
 	}
+}
+
+void AMyGameState::MovePreviewRowUp_Implementation()
+{
+	
 }
 
 void AMyGameState::ClearPoms(int32& groupsCleared)

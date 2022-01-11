@@ -40,10 +40,13 @@ public:
 	void Restart();
 
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
-	void SpawnRow();
+	TArray<APomBase*> SpawnPreviewRow();
 
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
 	void SpawnInitialRows();
+
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
+	void MovePreviewRowUp();
 	
 	UFUNCTION(BlueprintCallable)
 	// Returning like this let's me change what the return looks like in BluePrints
@@ -62,10 +65,14 @@ public:
 public:
 	UPROPERTY(EditDefaultsOnly, Category="Paramters")
 	TSubclassOf<AActor> PomClass;
+	UPROPERTY(EditDefaultsOnly, Category="Paramters")
+	TSubclassOf<AActor> SinglePomClass;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FTransform m_previewPosition;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FTransform m_activePosition;
+	UPROPERTY(EditAnywhere)
+	float m_rowPreviewZPosition;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int32 COUNT_TO_CLEAR = 3;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
@@ -76,6 +83,8 @@ public:
 	bool m_gameOver;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	APomBase* nextPom = nullptr;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TArray<APomBase*> m_previewRowPoms;
 	// The value that is added to the 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int32 clearScoreIncrease = 15;
