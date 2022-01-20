@@ -45,7 +45,7 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
 	void SpawnInitialRows();
 
-	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
+	UFUNCTION(BlueprintCallable)
 	void MovePreviewRowUp();
 	
 	UFUNCTION(BlueprintCallable)
@@ -85,6 +85,7 @@ public:
 	APomBase* nextPom = nullptr;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TArray<APomBase*> m_previewRowPoms;
+	
 	// The value that is added to the 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int32 clearScoreIncrease = 15;

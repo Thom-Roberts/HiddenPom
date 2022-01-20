@@ -160,9 +160,28 @@ void AMyGameState::SpawnInitialRows_Implementation()
 	}
 }
 
-void AMyGameState::MovePreviewRowUp_Implementation()
+void AMyGameState::MovePreviewRowUp()
 {
-	
+	// Insert these poms into m_poms
+	// Insert the poms into m_pomColors
+	m_poms.Insert(m_previewRowPoms, 0);
+	TArray<PomColor> colorsToInsert;
+	for(auto& pom: m_previewRowPoms)
+		colorsToInsert.Add(pom->pomColor);
+	m_pomColors.Insert(colorsToInsert, 0);
+	// Set the positions of each pom in the m_poms list
+	for(int32 row = 0; row < m_poms.Num(); row++)
+	{
+		for(int32 col = 0; col < COLUMN_COUNT; col++)
+		{
+			APomBase* potentialPom = m_poms[row][col];
+			if(IsValid(potentialPom))
+			{
+				const FVector position = CreatePomPositionVector(row, col);
+				potentialPom->SetActorLocation(position, false, nullptr, ETeleportType::TeleportPhysics);
+			}
+		}
+	}
 }
 
 void AMyGameState::ClearPoms(int32& groupsCleared)

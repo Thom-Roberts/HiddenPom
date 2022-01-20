@@ -6,12 +6,21 @@
 APomPlayerState::APomPlayerState()
 {
 	craftPoints = 0;
-	
-	baseMoveSpeed = 20.0;
-	moveSpeed = baseMoveSpeed;
-	moveSpeedIncrease = 5.0;
-	maxMoveSpeed = 200.0;
-	heldDownMoveSpeed = 500.0;
-	
-	movesUntilNextRowSpawn = 3;
+	clearScoreIncrease = 15;
+	movesUntilNextRowSpawnList = { 4, 4, 4, 4, 3, 3, 3, 3, 2 };
+	movesIndex = 0;
+	currentMoveCount = 0;
+}
+
+void APomPlayerState::HandlePomLanded_Implementation()
+{
+	currentMoveCount++;
+}
+
+void APomPlayerState::HandleNewRowSpawn_Implementation()
+{
+	currentMoveCount = 0;
+	movesIndex++;
+	if(movesIndex == movesUntilNextRowSpawnList.Num())
+		movesIndex--;
 }

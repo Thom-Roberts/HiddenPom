@@ -15,22 +15,28 @@ class POM_API APomPlayerState : public APlayerState
 	GENERATED_BODY()
 
 	APomPlayerState();
+
+public:
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
+	void HandlePomLanded();
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
+	void HandleNewRowSpawn();
 	
 public:
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Scoring")
 	int32 craftPoints;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	float baseMoveSpeed;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	float moveSpeed;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	float moveSpeedIncrease;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	float maxMoveSpeed;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	float heldDownMoveSpeed;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int32 movesUntilNextRowSpawn;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Scoring")
+	int32 clearScoreIncrease;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Scoring")
+	int32 m_currentClearScoreValue;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Spawning")
+	TArray<int32> movesUntilNextRowSpawnList;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Spawning")
+	int32 movesIndex = 0;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Spawning")
+	int32 currentMoveCount = 0;
+	
 private:
 	
 };
