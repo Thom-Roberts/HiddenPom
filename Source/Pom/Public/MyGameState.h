@@ -6,8 +6,10 @@
 #include "GameFramework/GameStateBase.h"
 #include "PomBase.h"
 #include "PlayerBase.h"
+#include "Components/BoxComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "MyGameState.generated.h"
+
 
 struct ArrayIndex
 {

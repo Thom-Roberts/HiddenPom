@@ -186,6 +186,13 @@ void AMyGameState::MovePreviewRowUp()
 			}
 		}
 	}
+
+	// Toggle pom collision
+	for(const auto &pom: m_previewRowPoms)
+	{
+		UBoxComponent* collision = Cast<UBoxComponent>(pom->GetComponentByClass(UBoxComponent::StaticClass()));
+		collision->SetGenerateOverlapEvents(true);
+	}
 }
 
 void AMyGameState::ClearPoms(int32& countGroupsCleared, int32& countPomsCleared)
