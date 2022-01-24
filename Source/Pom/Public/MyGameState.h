@@ -50,7 +50,7 @@ public:
 	
 	UFUNCTION(BlueprintCallable)
 	// Returning like this let's me change what the return looks like in BluePrints
-	void ClearPoms(UPARAM(DisplayName="Groups Cleared") int32& countCleared);
+	void ClearPoms(UPARAM(DisplayName="Groups Cleared") int32& countGroupsCleared, UPARAM(DisplayName="Poms cleared") int32& countPomsCleared);
 	void CheckPom(int row, int column, PomColor& colorToMatch, TArray<ArrayIndex>& matchedIndices);
 	
 	UFUNCTION(BlueprintCallable)
@@ -95,7 +95,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int32 clearScoreIncrease = 15;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int32 m_currentClearScoreValue;
+	int32 m_currentClearScoreValue = 15;
 	
 private:
 	void ResetArray(TArray<TArray<bool>>& arr);
@@ -115,7 +115,7 @@ private:
 	// Used for populating initial setting of arrays
 	TArray<bool> m_falseArray;
 	TArray<APomBase*> m_nullptrArray;
-    uint32 m_initialClearScoreValue = 10;
+    uint32 m_initialClearScoreValue;
 	
 	FActorSpawnParameters m_spawnParameters;
 };

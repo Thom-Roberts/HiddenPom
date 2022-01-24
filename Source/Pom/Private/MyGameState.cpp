@@ -22,9 +22,10 @@ AMyGameState::AMyGameState()
 	m_falseArray.Init(false, COLUMN_COUNT);
 	m_nullptrArray.Init(nullptr, COLUMN_COUNT);
 	m_previewRowPoms.Init(nullptr, COLUMN_COUNT);
-	
-	m_currentClearScoreValue = m_initialClearScoreValue;
 
+	// Remember what clear value we start with
+	m_initialClearScoreValue = m_currentClearScoreValue;
+	
 	m_currentMoveSpeed = 15.;
 	m_maxMoveSpeed = 600.;
 }
@@ -187,11 +188,12 @@ void AMyGameState::MovePreviewRowUp()
 	}
 }
 
-void AMyGameState::ClearPoms(int32& groupsCleared)
+void AMyGameState::ClearPoms(int32& countGroupsCleared, int32& countPomsCleared)
 {
 	// Initialize arrays to false
 	ResetArray(m_shouldPositionBeCleared);
-	groupsCleared = 0;
+	countGroupsCleared = 0;
+	countPomsCleared = 0;
 	TArray<ArrayIndex> matchedIndices;
 	// See if poms should have themselves removed
 	for(int i = 0; i < m_pomColors.Num(); i++)
@@ -211,8 +213,9 @@ void AMyGameState::ClearPoms(int32& groupsCleared)
 					m_shouldPositionBeCleared
 						[matchedIndex.row]
 						[matchedIndex.column] = true;
+					countPomsCleared++;
 				}
-				groupsCleared++;
+				countGroupsCleared++;
 			}
 		}
 	}
