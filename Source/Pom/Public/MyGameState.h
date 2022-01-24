@@ -63,9 +63,9 @@ public:
 	void ResetScoreBonus();
 
 public:
-	UPROPERTY(EditDefaultsOnly, Category="Paramters")
+	UPROPERTY(EditDefaultsOnly, Category="Parameters")
 	TSubclassOf<AActor> PomClass;
-	UPROPERTY(EditDefaultsOnly, Category="Paramters")
+	UPROPERTY(EditDefaultsOnly, Category="Parameters")
 	TSubclassOf<AActor> SinglePomClass;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FTransform m_previewPosition;
@@ -85,6 +85,11 @@ public:
 	APomBase* nextPom = nullptr;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TArray<APomBase*> m_previewRowPoms;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Dropping")
+	float m_currentMoveSpeed;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Dropping")
+	float m_maxMoveSpeed;
 	
 	// The value that is added to the 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)

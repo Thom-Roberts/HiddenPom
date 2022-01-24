@@ -3,6 +3,8 @@
 
 #include "PomPlayerState.h"
 
+#include "MyGameState.h"
+
 APomPlayerState::APomPlayerState()
 {
 	craftPoints = 0;
@@ -23,4 +25,6 @@ void APomPlayerState::HandleNewRowSpawn_Implementation()
 	movesIndex++;
 	if(movesIndex == movesUntilNextRowSpawnList.Num())
 		movesIndex--;
+
+	Cast<AMyGameState>(GetWorld()->GetGameState());
 }

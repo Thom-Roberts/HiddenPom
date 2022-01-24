@@ -24,6 +24,9 @@ AMyGameState::AMyGameState()
 	m_previewRowPoms.Init(nullptr, COLUMN_COUNT);
 	
 	m_currentClearScoreValue = m_initialClearScoreValue;
+
+	m_currentMoveSpeed = 15.;
+	m_maxMoveSpeed = 600.;
 }
 
 APomBase* AMyGameState::SpawnNewPomInPreviewPosition()
