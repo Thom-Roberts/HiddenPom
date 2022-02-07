@@ -120,7 +120,7 @@ void AMyGameState::SpawnInitialRows_Implementation()
 {
 	UWorld* world = GetWorld();
 	const int32 xPos = -20;
-
+	const int32 numRowsToSpawn = 4;
 	FTransform spawnTransform;
 	spawnTransform.SetComponents(
 	FQuat::MakeFromEuler(FVector(0)),
@@ -128,26 +128,19 @@ void AMyGameState::SpawnInitialRows_Implementation()
 	FVector(1)
 	);
 	
-	for(int32 i = 0; i < COLUMN_COUNT; i++)
+	for(int32 r = 0; r < numRowsToSpawn; r++)
 	{
-		spawnTransform.SetLocation(
-			CreatePomPositionVector(0, i)
-		);
-		AActor* spawnedPom = world->SpawnActorAbsolute(PomClass, spawnTransform);
-		APomBase* pom = Cast<APomBase>(spawnedPom);
-		pom->m_shouldTriggerOverlaps = false;
-		pom->BecomeInactive();
-
-		spawnTransform.SetLocation(
-			CreatePomPositionVector(2, i)
-		);
-		spawnedPom = world->SpawnActorAbsolute(PomClass, spawnTransform);
-		pom = Cast<APomBase>(spawnedPom);
-		pom->m_shouldTriggerOverlaps = false;
-		pom->BecomeInactive();
+		for(int32 i = 0; i < COLUMN_COUNT; i++)
+		{
+			spawnTransform.SetLocation(
+				CreatePomPositionVector(r, i)
+			);
+			AActor* spawnedPom = world->SpawnActorAbsolute(SinglePomClass, spawnTransform);
+			APomBase* pom = Cast<APomBase>(spawnedPom);
+			pom->BecomeInactive();
+		}
 	}
-
-	printf("Above would be cleared");
+	
 	// Ensure we don't have any initial clearings
 	while(WouldPomsBeCleared())
 	{
