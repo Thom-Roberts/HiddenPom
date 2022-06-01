@@ -323,6 +323,36 @@ void AMyGameState::ResetScoreBonus()
 	m_currentClearScoreValue = m_initialClearScoreValue;
 }
 
+void AMyGameState::Attack(int32 countRowsToSend)
+{
+}
+
+void AMyGameState::Defend(int32 countRowsToClear)
+{
+	// Fade out on the bottom two rows
+	// to be implemented later
+
+	// Delete the poms / colors from the 
+	for(int32 i = 0; i < countRowsToClear; i++)
+	{
+		for(int32 j = 0; j < COLUMN_COUNT; j++)
+		{
+			auto& pomToDelete = m_poms[i][j];
+			if(IsValid(pomToDelete))
+			{
+				pomToDelete->Destroy();
+				pomToDelete = nullptr;
+				m_pomColors[i][j] = PomColor::None;
+			}
+		}
+	}
+	
+	// Move everything down
+	MovePomsDown();
+
+	DefendCallback();
+}
+
 void AMyGameState::ResetArray(TArray<TArray<bool>>& arr)
 {
 	const int maxHeight = m_poms.Num();

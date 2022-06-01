@@ -63,7 +63,16 @@ public:
 	
 	UFUNCTION(BlueprintCallable)
 	void ResetScoreBonus();
+	
+	UFUNCTION(BlueprintCallable)
+	void Attack(int32 countRowsToSend);
+	
+	UFUNCTION(BlueprintCallable)
+	void Defend(int32 countRowsToClear);
 
+	UFUNCTION(BlueprintImplementableEvent)
+	void DefendCallback();
+	
 public:
 	UPROPERTY(EditDefaultsOnly, Category="Parameters")
 	TSubclassOf<AActor> PomClass;
