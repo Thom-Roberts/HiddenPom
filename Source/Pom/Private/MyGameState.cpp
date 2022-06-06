@@ -300,7 +300,7 @@ void AMyGameState::MovePomsDown()
 			}
 		}
 	}
-
+	
 	// Adjust positions
 	for(int i = 0; i < m_poms.Num(); i++)
 	{
